@@ -19,35 +19,42 @@ export default function App() {
     fetchData();
   }, []);
 
-  const parsedData = (data) => {
-    return data.map((item, index) => {
-      return (
-        <tr key={index}>
-          <td>{item.symbol}</td>
-          <td>{item.lastPrice}</td>
-          <td>{item.priceChange}</td>
-        </tr>
-      );
-    });
+  const generateTable = (data) => {
+    //console.log(data)
+    return (
+      <table>
+        <thead
+          style={{
+            backgroundColor: "black",
+            color: "white"
+          }}
+        >
+          <tr key="titles">
+            {Object.keys(data[0]).map((key) => (
+              <td style={{ padding: "0 40px" }}>{key}</td>
+            ))}
+          </tr>
+        </thead>
+        {data.map((item, index) => {
+          return (
+            <tbody>
+              <tr key={index}>
+                {Object.values(item).map((value) => (
+                  <td>{value}</td>
+                ))}
+              </tr>
+            </tbody>
+          );
+        })}
+        ;
+      </table>
+    );
   };
 
   return (
     <div className="App">
       <h1>Binance cryptos</h1>
-      {loading ? (
-        <h2>Loading...</h2>
-      ) : (
-        <table>
-          <thead style={{ backgroundColor: "black", color: "white" }}>
-            <tr>
-              <td>Symbol</td>
-              <td>Last Price</td>
-              <td>Price Change</td>
-            </tr>
-          </thead>
-          <tbody>{data && parsedData(data)}</tbody>
-        </table>
-      )}
+      {loading ? <h2>Loading...</h2> : data && generateTable(data)}
     </div>
   );
 }
